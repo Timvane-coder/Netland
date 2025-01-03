@@ -87,3 +87,7 @@ async function connectToWhatsApp(){
 
 // Execução principal
 connectToWhatsApp()
+
+app.listen(PORT, () => {
+  console.log('App listened on port:', PORT)
+})
