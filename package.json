@@ -5,7 +5,7 @@
   "type": "module",
   "exports": "./app.js",
   "scripts": {
-    "start": "yarn upgrade @victorsouzaleal/lbot-api-comandos --silent && node app.js",
+    "start": "npm upgrade @victorsouzaleal/lbot-api-comandos --silent && node app.js",
     "dev": "node app.js"
   },
   "author": "Leal",
