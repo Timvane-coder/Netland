@@ -7,6 +7,11 @@ import configSocket from './bot/baileys/configSocket.js'
 import moment from "moment-timezone"
 import NodeCache from 'node-cache'
 moment.tz.setDefault('America/Sao_Paulo')
+import express from 'express'
+import http from 'http'
+
+const app = new express();
+let PORT = process.env.PORT || 3000
 
 
 //Cache de tentativa de envios
