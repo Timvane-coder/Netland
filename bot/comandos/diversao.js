@@ -1,7 +1,7 @@
 //REQUERINDO MODULOS
 import {criarTexto, primeiraLetraMaiuscula, erroComandoMsg, consoleErro, timestampParaData} from '../lib/util.js'
 import path from 'node:path'
-import api from '@victorsouzaleal/lbot-api-comandos'
+import api from '../api/api.js'
 import * as socket from '../baileys/socket.js'
 import { tiposMensagem } from '../baileys/mensagem.js'
 import {comandosInfo} from '../comandos/comandos.js'
