@@ -1,6 +1,6 @@
 import {tiposMensagem} from './mensagem.js'
 import {delayAleatorio} from '../lib/util.js'
-import api from 'api/api.js'
+import api from '../api/api.js'
 
 // Gerais
 export const deletarMensagem = async(c, mensagem, mensagemCitada = false)=>{
