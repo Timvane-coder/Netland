@@ -1,0 +1,186 @@
+import { messageTypes } from './message.js';
+import { randomDelay } from '../lib/util.js';
+import api from '@victorsouzaleal/lbot-api-comandos';
+
+// General
+export const deleteMessage = async (c, message, quotedMessage = false) => {
+    let deletedMessage;
+    if (quotedMessage) {
+        deletedMessage = {
+            remoteJid: message.key.remoteJid,
+            fromMe: false,
+            id: message.message.extendedTextMessage.contextInfo.stanzaId,
+            participant: message.message.extendedTextMessage.contextInfo.participant
+        };
+    } else {
+        deletedMessage = message.key;
+    }
+    return await c.sendMessage(message.key.remoteJid, { delete: deletedMessage });
+};
+
+export const markMessageAsRead = async (c, chatId, sender, messageId) => {
+    return await c.sendReceipt(chatId, sender, [messageId], 'read');
+};
+
+export const updatePresence = async (c, chatId, type) => {
+    await c.presenceSubscribe(chatId);
+    await randomDelay(200, 400);
+    await c.sendPresenceUpdate(type, chatId);
+    await randomDelay(300, 1000);
+    await c.sendPresenceUpdate('paused', chatId);
+};
+
+export const changeProfilePicture = async (c, chatId, imageBuffer) => {
+    return await c.updateProfilePicture(chatId, imageBuffer);
+};
+
+export const changeProfileStatus = async (c, status) => {
+    return await c.updateProfileStatus(status);
+};
+
+export const shutdownBot = async (c) => {
+    return await c.end(new Error("Command"));
+};
+
+export const getProfilePicture = async (c, chatId) => {
+    return await c.profilePictureUrl(chatId, "image");
+};
+
+export const blockContact = async (c, userId) => {
+    return await c.updateBlockStatus(userId, "block");
+};
+
+export const unblockContact = async (c, userId) => {
+    return await c.updateBlockStatus(userId, "unblock");
+};
+
+export const getHostNumber = async (c) => {
+    let id = c.user.id.replace(/:[0-9]+/ism, '');
+    return id;
+};
+
+export const getBlockedContacts = async (c) => {
+    return await c.fetchBlocklist();
+};
+
+// Sending Messages
+export const sendText = async (c, chatId, text) => {
+    await updatePresence(c, chatId, "composing");
+    return await c.sendMessage(chatId, { text: text, linkPreview: null });
+};
+
+export const forwardMessage = async (c, chatId, message, quotedMessage) => {
+    message[Object.keys(message)[0]].contextInfo = {
+        stanzaId: quotedMessage.key.id,
+        remoteJid: quotedMessage.key.remoteJid,
+        participant: quotedMessage.key.participant || quotedMessage.key.remoteJid,
+        fromMe: quotedMessage.key.fromMe,
+        quotedMessage: {}
+    };
+    return await c.relayMessage(chatId, message, {});
+};
+
+export const sendPoll = async (c, chatId, pollName, pollValues) => {
+    return await c.sendMessage(chatId, { poll: { name: pollName, values: pollValues, selectableCount: 1 } });
+};
+
+export const sendLinkWithPreview = async (c, chatId, text) => {
+    await updatePresence(c, chatId, "composing");
+    return await c.sendMessage(chatId, { text: text });
+};
+
+export const sendTextWithMentions = async (c, chatId, text, mentionedUsers) => {
+    await updatePresence(c, chatId, "composing");
+    return await c.sendMessage(chatId, { text: text, mentions: mentionedUsers });
+};
+
+export const sendSticker = async (c, chatId, sticker) => {
+    return await c.sendMessage(chatId, { sticker });
+};
+
+export const sendFileFromUrl = async (c, type, chatId, url, caption) => {
+    if (type == messageTypes.image) {
+        return await c.sendMessage(chatId, { image: { url }, caption: caption });
+    }
+};
+
+export const replyWithText = async (c, chatId, text, quotedMessage) => {
+    await updatePresence(c, chatId, "composing");
+    return await c.sendMessage(chatId, { text: text, linkPreview: null }, { quoted: quotedMessage });
+};
+
+export const replyWithLocalFile = async (c, type, chatId, filePath, caption, quotedMessage, mimeType = '') => {
+    if (type == messageTypes.image) {
+        return await c.sendMessage(chatId, { image: { url: filePath }, caption: caption }, { quoted: quotedMessage });
+    } else if (type == messageTypes.video) {
+        let base64Thumb = (await api.Videos.getVideoThumbnail(filePath)).result;
+        return await c.sendMessage(chatId, { video: { url: filePath }, mimeType, caption: caption, jpegThumbnail: base64Thumb }, { quoted: quotedMessage });
+    } else if (type == messageTypes.audio) {
+        return await c.sendMessage(chatId, { audio: { url: filePath }, mimeType }, { quoted: quotedMessage });
+    }
+};
+
+export const replyWithUrlFile = async (c, type, chatId, url, caption, quotedMessage, mimeType = '') => {
+    if (type == messageTypes.image) {
+        return await c.sendMessage(chatId, { image: { url }, caption: caption }, { quoted: quotedMessage });
+    } else if (type == messageTypes.video) {
+        let base64Thumb = (await api.Videos.getVideoThumbnail(url, "url")).result;
+        return await c.sendMessage(chatId, { video: { url }, mimeType, caption: caption, jpegThumbnail: base64Thumb }, { quoted: quotedMessage });
+    } else if (type == messageTypes.audio) {
+        return await c.sendMessage(chatId, { audio: { url }, mimeType }, { quoted: quotedMessage });
+    }
+};
+
+export const replyWithBufferFile = async (c, type, chatId, buffer, caption, quotedMessage, mimeType = '') => {
+    if (type == messageTypes.video) {
+        let base64Thumb = (await api.Videos.getVideoThumbnail(buffer, "buffer")).result;
+        return await c.sendMessage(chatId, { video: buffer, caption: caption, mimeType, jpegThumbnail: base64Thumb }, { quoted: quotedMessage });
+    } else if (type == messageTypes.image) {
+        return await c.sendMessage(chatId, { image: buffer, caption: caption }, { quoted: quotedMessage });
+    } else if (type == messageTypes.audio) {
+        return await c.sendMessage(chatId, { audio: buffer, mimeType }, { quoted: quotedMessage });
+    }
+};
+
+export const replyWithMentions = async (c, chatId, text, mentionedUsers, quotedMessage) => {
+    await updatePresence(c, chatId, "composing");
+    return await c.sendMessage(chatId, { text: text, mentions: mentionedUsers }, { quoted: quotedMessage });
+};
+
+// Groups
+export const joinGroupByLink = async (c, linkId) => {
+    return await c.groupAcceptInvite(linkId);
+};
+
+export const revokeGroupLink = async (c, groupId) => {
+    return await c.groupRevokeInvite(groupId);
+};
+
+export const getGroupLink = async (c, groupId) => {
+    let inviteCode = await c.groupInviteCode(groupId);
+    return inviteCode ? `https://chat.whatsapp.com/${inviteCode}` : undefined;
+};
+
+export const leaveGroup = async (c, groupId) => {
+    return await c.groupLeave(groupId);
+};
+
+export const getGroupInviteInfo = async (c, link) => {
+    return await c.groupGetInviteInfo(link);
+};
+
+export const updateGroupRestriction = async (c, groupId, status) => {
+    let config = status ? "announcement" : "not_announcement";
+    return await c.groupSettingUpdate(groupId, config);
+};
+
+// Group Members Management
+export const removeParticipant = async (c, groupId, participant) => {
+    let response = await c.groupParticipantsUpdate(groupId, [participant], "remove");
+    return response[0];
+};
+
+export const addParticipant = async (c, groupId, participant) => {
+    let response = await c.groupParticipantsUpdate(groupId, [participant], "add");
+    return response[0];
+}
