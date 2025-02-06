@@ -5,32 +5,32 @@ export function comandosInfo(botInfo){
         info: {
             menu: {
                 descricao: '',
-                guia: `Ex: *${prefixo}menu* -Displays the general commands menu.\n`,
+                guide: `Ex: *${prefixo}menu* -Displays the general commands menu.\n`,
                 msgs: {
                     resposta_comum: "Hello, *{p1}*\n"+
-                    "Tipo de Usuário : *{p2}*\n"+
-                    "Comandos feitos : *{p3}*\n",
+                    "UserType : *{p2}*\n"+
+                    "Commands : *{p3}*\n",
                     resposta_limite_diario: "Olá, *{p1}*\n"+
-                    "Limite diário : *{p2}/{p3}*\n"+
-                    "Tipo de Usuário : *{p4}*\n"+
-                    "Comandos feitos : *{p5}*\n"
+                    "daily limit : *{p2}/{p3}*\n"+
+                    "UserType : *{p4}*\n"+
+                    "Commands : *{p5}*\n"
                 }
             },
             report: {
                 descricao: '',
-                guia: `Ex: *${prefixo}report* message - Reports a message to the Bot administration.\n`,
+                guide: `Ex: *${prefixo}report* message - Reports a message to the Bot administration.\n`,
                 msgs: {
                     sucesso: `✅ Thank you, your problem has been successfully reported and will be analyzed by the owner.`,
                     erro: '[❗] It was not possible to send the message to the owner, because he is not registered yet.',
                     resposta: "[ 🤖 REPORTED ⚙️]\n\n"+
-                    "*Usuário* : {p1}\n"+
-                    "*Contato* : http://wa.me/{p2}\n"+
-                    "*Problema* : {p3}\n"
+                    "*User* : {p1}\n"+
+                    "*Contact* : http://wa.me/{p2}\n"+
+                    "*Problem* : {p3}\n"
                 }
             },
             mydata: {
                 descricao: '',
-                guia: `Ex: *${prefixo}mydata* Displays your general data as commands, messages, user type, etc.\n`,
+                guide: `Ex: *${prefixo}mydata* Displays your general data as commands, messages, user type, etc.\n`,
                 msgs: {
                     resposta_geral: "[🤖*SEUS DADOS DE USO*🤖]\n\n"+
                     "Tye of user : *{p1}*\n"+
@@ -43,14 +43,14 @@ export function comandosInfo(botInfo){
             },
             info: {
                 descricao: '',
-                guia: `Ex: *${prefixo}info* - Displays the information about bot and admin.\n`,
+                guide: `Ex: *${prefixo}info* - Displays the information about bot and admin.\n`,
                 msgs: {
                     resposta: "*Criador do Bot* : {p1}\n"+
-                    "*Nome do bot* : {p2}\n"+
-                    "*Online desde* : {p3}\n"+
-                    "*Comandos executados* : {p4}\n"+
-                    "*Contato do criador* : wa.me/{p5}\n"+
-                    "*Versão atual* : {p6}\n"+
+                    "*Bot* : {p2}\n"+
+                    "*Online Status* : {p3}\n"+
+                    "*Command Executed* : {p4}\n"+
+                    "*Contact Developer* : wa.me/{p5}\n"+
+                    "*Version* : {p6}\n"+
                     "*GitHub* : https://github.com/victorsouzaleal/lbot-whatsapp\n"
                 }
             }
@@ -59,7 +59,7 @@ export function comandosInfo(botInfo){
         utilidades: {
             animes:{
                 descricao: '',
-                guia: `Ex: *${prefixo}animes* - Displays the latest releases of anime episodes.\n`,
+                guide: `Ex: *${prefixo}animes* - Displays the latest releases of anime episodes.\n`,
                 msgs: {
                     resposta_titulo: 'ANIME RELEASES 🇯🇵 \n\n',
                     resposta_item: '- Nome: {p1} \n'+
@@ -69,7 +69,7 @@ export function comandosInfo(botInfo){
             },
             mangas:{
                 descricao: '',
-                guia: `Ex: *${prefixo}mangas* -Displays the latest releases of manga chapters.\n`,
+                guide: `Ex: *${prefixo}mangas* -Displays the latest releases of manga chapters.\n`,
                 msgs: {
                     resposta_titulo: '🇯🇵 MANGA RELEASES🇯🇵 \n\n',
                     resposta_item: '- Nome: {p1} \n'+
