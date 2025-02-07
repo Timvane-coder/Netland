@@ -1,0 +1,975 @@
+import sys
+import math
+from OpenGL.GL import *
+from OpenGL.GLUT import *
+from OpenGL.GLU import *
+
+# #include<stdio.h>
+# #include<GL/glut.h>
+# #include<math.h>
+# #include<string.h>
+# #pragma GCC diagnostic ignored "-Wwrite-strings"
+# //#include <stdlib.h>
+turn = 0
+def doort(v):
+    global xx, zz, xx1
+    # door timing 
+    if xx < 0.2 and zz < 0.2:
+        xx += 0.01
+        zz += 0.01
+
+    xx1 = 0
+
+    glutPostRedisplay()
+    glutTimerFunc(100, doort, 0)
+
+xx = 0.0
+zz = 0.0
+xx1 = 1
+lx = 0.0
+lz = -1.0
+angle = 0.0
+viewer = [0.0, 0.2, 4.2]  # static GLdouble viewer[] = { 0.0, 0.2, 4.2 };
+lat = [0.0, 0.2, 0.0]     # static GLdouble lat[] = { 0.0, 0.2, 0.0 };
+oo = 0
+cr = 0
+cb = 0
+cg = 0
+font = GLUT_BITMAP_HELVETICA_18  # void* font = GLUT_BITMAP_HELVETICA_18;
+
+def output(x, y, s):
+    glRasterPos2f(x, y)
+    for i in range(len(s)):
+        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, ord(s[i]))
+
+def tfs(v):
+    global cr, cb, cg
+    cr += 0.01
+    cb += 0.001
+    cg += 0.0001
+    if cr > 1.0:
+        cr = 0
+
+    if cb > 1.0:
+        cb = 0
+
+    if cg > 1.0:
+        cg = 0
+
+    glutPostRedisplay()
+    glutTimerFunc(100, tfs, 0)
+
+def lines():
+    glColor3f(0.0, 0.0, 0.0)   #2x2 ka room   every tile spacing is 0.2
+    glLineWidth(0.2)
+    glBegin(GL_LINES)
+    glVertex3f(-0.8, 0.00, 1)
+    glVertex3f(-0.8, 0.00, -1)
+    glEnd()
+    glBegin(GL_LINES)
+    glVertex3f(-0.6, 0.00, 1)
+    glVertex3f(-0.6, 0.00, -1)
+    glEnd()
+    glBegin(GL_LINES)
+    glVertex3f(-0.4, 0.00, 1)
+    glVertex3f(-0.4, 0.00, -1)
+    glEnd()
+    glBegin(GL_LINES)
+    glVertex3f(-0.2, 0.00, 1)
+    glVertex3f(-0.2, 0.00, -1)
+    glEnd()
+    glBegin(GL_LINES)
+    glVertex3f(0.0, 0.00, 1)
+    glVertex3f(0.0, 0.00, -1)
+    glEnd()
+    glBegin(GL_LINES)
+    glVertex3f(0.2, 0.00, 1)
+    glVertex3f(0.2, 0.00, -1)
+    glEnd()
+    glBegin(GL_LINES)
+    glVertex3f(0.4, 0.00, 1)
+    glVertex3f(0.4, 0.00, -1)
+    glEnd()
+    glBegin(GL_LINES)
+    glVertex3f(0.6, 0.00, 1)
+    glVertex3f(0.6, 0.00, -1)
+    glEnd()
+    glBegin(GL_LINES)
+    glVertex3f(0.8, 0.00, 1)
+    glVertex3f(0.8, 0.00, -1)
+    glEnd()
+    glBegin(GL_LINES)
+    glVertex3f(1.0, 0.00, 1)
+    glVertex3f(1.0, 0.00, -1)
+    glEnd()
+    #vertical
+
+    glBegin(GL_LINES)
+    glVertex3f(-1, 0.00, -0.8)
+    glVertex3f(1, 0.00, -0.8)
+    glEnd()
+
+    glBegin(GL_LINES)
+    glVertex3f(-1, 0.00, -0.6)
+    glVertex3f(1, 0.00, -0.6)
+    glEnd()
+    glBegin(GL_LINES)
+    glVertex3f(-1, 0.00, -0.4)
+    glVertex3f(1, 0.00, -0.4)
+    glEnd()
+    glBegin(GL_LINES)
+    glVertex3f(-1, 0.00, -0.2)
+    glVertex3f(1, 0.00, -0.2)
+    glEnd()
+    glBegin(GL_LINES)
+    glVertex3f(-1, 0.00, 0.0)
+    glVertex3f(1, 0.00, 0.0)
+    glEnd()
+    glBegin(GL_LINES)
+    glVertex3f(-1, 0.00, 0.2)
+    glVertex3f(1, 0.00, 0.2)
+    glEnd()
+    glBegin(GL_LINES)
+    glVertex3f(-1, 0.00, 0.4)
+    glVertex3f(1, 0.00, 0.4)
+    glEnd()
+    glBegin(GL_LINES)
+    glVertex3f(-1, 0.00, 0.6)
+    glVertex3f(1, 0.00, 0.6)
+    glEnd()
+    glBegin(GL_LINES)
+    glVertex3f(-1, 0.00, 0.8)
+    glVertex3f(1, 0.00, 0.8)
+    glEnd()
+    glBegin(GL_LINES)
+    glVertex3f(-1, 0.00, 1.0)
+    glVertex3f(1, 0.00, 1.0)
+    glEnd()
+
+def redwall():
+    #--------------dark red top---------------------
+    glColor3f(0.53, 0.12, 0.12)
+    glBegin(GL_POLYGON)
+    glVertex3f(-0.98, 0.0, 1)
+    glVertex3f(-0.98, 0.5, 1)
+    glVertex3f(-0.98, 0.5, 0.9)
+    glVertex3f(-0.98, 0.0, 0.9)
+    glEnd()
+
+    glBegin(GL_POLYGON)
+    glVertex3f(-0.98, 0.5, 0.9)
+    glVertex3f(-0.98, 0.5, -0.2)
+    glVertex3f(-0.98, 0.4, -0.2)
+    glVertex3f(-0.98, 0.4, 0.9)
+    glEnd()
+
+    glBegin(GL_POLYGON)
+    glVertex3f(-0.98, 0.5, -0.3)
+    glVertex3f(-0.98, 0.0, -0.3)
+    glVertex3f(-0.98, 0.0, -0.2)
+    glVertex3f(-0.98, 0.5, -0.2)
+    glEnd()
+    #--------------grey mid--------------
+
+    glColor3f(0.69, 0.58, 0.56)
+    glBegin(GL_POLYGON)
+    glVertex3f(-0.98, 0.0, 0.9)
+    glVertex3f(-0.98, 0.4, 0.9)
+    glVertex3f(-0.98, 0.4, 0.7)
+    glVertex3f(-0.98, 0.0, 0.7)
+    glEnd()
+
+    glBegin(GL_POLYGON)
+    glVertex3f(-0.98, 0.4, 0.7)
+    glVertex3f(-0.98, 0.4, 0.0)
+    glVertex3f(-0.98, 0.25, 0.0)
+    glVertex3f(-0.98, 0.25, 0.7)
+    glEnd()
+    glBegin(GL_POLYGON)
+    glVertex3f(-0.98, 0.4, -0.2)
+    glVertex3f(-0.98, 0.0, -0.2)
+    glVertex3f(-0.98, 0.0, 0.0)
+    glVertex3f(-0.98, 0.4, 0.0)
+    glEnd()
+
+    #--------------black----------------
+    glColor3f(0.15, 0.11, 0.11)
+    glBegin(GL_POLYGON)
+    glVertex3f(-0.98, 0.0, 0.7)
+    glVertex3f(-0.98, 0.25, 0.7)
+    glVertex3f(-0.98, 0.25, 0.65)
+    glVertex3f(-0.98, 0.0, 0.65)
+    glEnd()
+    glBegin(GL_POLYGON)
+    glVertex3f(-0.98, 0.25, 0.65)
+    glVertex3f(-0.98, 0.25, 0.0)
+    glVertex3f(-0.98, 0.2, 0.0)
+    glVertex3f(-0.98, 0.2, 0.65)
+    glEnd()
+
+    glBegin(GL_POLYGON)
+    glVertex3f(-0.98, 0.25, 0.0)
+    glVertex3f(-0.98, 0.0, 0.0)
+    glVertex3f(-0.98, 0.0, 0.05)
+    glVertex3f(-0.98, 0.25, 0.05)
+    glEnd()
+
+    #-------------black drawer---------
+
+    glColor3f(0.0, 0.0, 0.0)
+    glPushMatrix()                  # scale, translate  rotate matrix 
+    glTranslatef(-0.95, 0.06, 0.8)   #(z,y,x)
+    glScalef(1.1, 0.4, 1.5)    #(z,y,x)
+    glutSolidCube(0.1)
+    glPopMatrix()
+
+    glColor3f(1.0, 0.0, 0.0)
+    glPushMatrix()
+    glTranslatef(-0.92, 0.06, 0.8)
+    glScalef(0.56, 0.15, 1.45)
+    glutSolidCube(0.1)
+    glPopMatrix()
+
+    #---------bed(1st layer)------------
+    glColor3f(0.15, 0.11, 0.11)
+    glPushMatrix()
+    glTranslatef(-0.7, 0.01, 0.36)
+    glScalef(6, 0.25, 5)
+    glutSolidCube(0.1)
+    glPopMatrix()
+    #----------(2nd layer)---------------
+    glColor3f(0.17, 0.13, 0.12)
+    glPushMatrix()
+    glTranslatef(-0.7, 0.04, 0.36)
+    glScalef(6, 0.3, 5.2)
+    glutSolidCube(0.1)
+    glPopMatrix()
+
+    #----------bed-----------
+
+    glColor3f(0.84, 0.72, 0.69)
+    glPushMatrix()
+    glTranslatef(-0.7, 0.065, 0.36)
+    glScalef(5.9, 0.3, 5.1)
+    glutSolidCube(0.1)
+    glPopMatrix()
+    #--------------bedsheet----------------
+    glColor3f(0.86, 0.52, 0.55)
+    glPushMatrix()
+    glTranslatef(-0.5, 0.069, 0.36)
+    glScalef(2.5, 0.3, 5.2)
+    glutSolidCube(0.1)
+    glPopMatrix()
+
+    #--------------pillow---------------
+    glColor3f(0.86, 0.52, 0.55)
+    glPushMatrix()
+    glTranslatef(-0.9, 0.1, 0.5)
+    glScalef(1, 0.2, 1.5)
+    glRotatef(45, 0, 0, 1)
+    glutSolidCube(0.1)
+    glPopMatrix()
+
+    glColor3f(0.86, 0.52, 0.55)
+    glPushMatrix()
+    glTranslatef(-0.9, 0.1, 0.25)
+    glScalef(1, 0.2, 1.5)
+    glRotatef(45, 0, 0, 1)
+    glutSolidCube(0.1)
+    glPopMatrix()
+    #-------light-------
+
+    glColor3f(1.0, 1.0, 0.6)
+    glPushMatrix()
+    glTranslatef(-0.98, 0.3, -0.1)
+    #glScalef(2.5, 0.3, 5.2);
+    glRotatef(90, 1, 0, 0)
+    glutSolidCone(0.03, 0.07, 100, 100)  #(base,height,slice,stack)
+    glPopMatrix()
+
+    glColor3f(1.0, 1.0, 0.6)
+    glPushMatrix()
+    glTranslatef(-0.98, 0.3, 0.8)
+    #glScalef(2.5, 0.3, 5.2);
+    glRotatef(90, 1, 0, 0)
+    glutSolidCone(0.03, 0.07, 100, 100)
+    glPopMatrix()
+
+def greywall():
+    glColor3f(1.0, 1.0, 0.6)                  #yellow box design
+    glPushMatrix()
+    glTranslatef(-0.55, 0.32, 0. - 0.9)
+    glutSolidCube(0.08)
+    glPopMatrix()
+
+    glColor3f(1.0, 1.0, 0.6)
+    glPushMatrix()
+    glTranslatef(-0.43, 0.28, 0. - 0.9)
+    glutSolidCube(0.08)
+    glPopMatrix()
+
+    glColor3f(1.0, 1.0, 0.6)
+    glPushMatrix()
+    glTranslatef(-0.31, 0.32, 0. - 0.9)
+    glutSolidCube(0.08)
+    glPopMatrix()
+
+    glColor3f(1.0, 1.0, 0.6)
+    glPushMatrix()
+    glTranslatef(-0.2, 0.28, 0. - 0.9)
+    glutSolidCube(0.08)
+    glPopMatrix()
+
+def box():
+    #----------TV -------------
+    glColor3f(0.18, 0.12, 0.13)
+    glPushMatrix()
+    glTranslatef(0.46, 0.25, 0.5)
+    glScalef(0.1, 1.5, 3)
+    glutSolidCube(0.1)
+    glPopMatrix()
+
+    glColor3f(0.0, 0.0, 0.0)
+    glPushMatrix()
+    glTranslatef(0.47, 0.25, 0.5)
+    glScalef(0.1, 1.55, 3.3)
+    glutSolidCube(0.1)
+    glPopMatrix()
+
+    #--------------table-----------
+    glColor3f(0.0, 0.0, 0.0)
+    glPushMatrix()
+    glTranslatef(0.46, 0.1, 0.5)
+    glScalef(0.4, 0.4, 3)
+    glutSolidCube(0.1)
+    glPopMatrix()
+
+    glColor3f(1.0, 0.0, 0.0)
+    glPushMatrix()
+    glTranslatef(0.455, 0.1, 0.5)
+    glScalef(0.41, 0.2, 2.9)
+    glutSolidCube(0.1)
+    glPopMatrix()
+
+    #-----------speaker-----------
+    glColor3f(0.0, 0.0, 0.0)
+    glPushMatrix()
+    glTranslatef(0.47, 0.08, 0.2)
+    glScalef(0.1, 1.55, 0.7)
+    glutSolidCube(0.1)
+    glPopMatrix()
+
+    glColor3f(0.0, 0.0, 0.0)
+    glPushMatrix()
+    glTranslatef(0.47, 0.08, 0.8)
+    glScalef(0.1, 1.55, 0.7)
+    glutSolidCube(0.1)
+    glPopMatrix()
+
+    #--------wall design light-------------
+    glColor3f(1.0, 1.0, 0.6)
+    glPushMatrix()
+    glTranslatef(0.47, 0.4, 0.1)
+    glutSolidCube(0.08)
+    glPopMatrix()
+
+    glColor3f(1.0, 1.0, 0.6)
+    glPushMatrix()
+    glTranslatef(0.47, 0.35, 0.2)
+    glutSolidCube(0.08)
+    glPopMatrix()
+
+def sofa():
+    glColor3f(0.5,0.2,0.0)
+    glPushMatrix()                #brown portion 
+    glTranslatef(-0.32, 0.065, -0.3)
+    glScalef(4, 0.65, 1.7)
+    glutSolidCube(0.1)
+    glPopMatrix()
+
+    #------base-black-----------
+    glColor3f(0.0, 0.0, 0.0)
+    glPushMatrix()
+    glTranslatef(-0.32, 0.015, -0.3)
+    glScalef(4.1, 0.15, 1.71)
+    glutSolidCube(0.1)
+    glPopMatrix()
+
+    #-------back
+    glColor3f(0.0, 0.0, 0.0)
+    glPushMatrix()
+    glTranslatef(-0.32, 0.1, -0.36)
+    glScalef(4.1, 1.3, 0.61)
+    glutSolidCube(0.1)
+    glPopMatrix()
+
+    #---------seat----------
+    glColor3f(0,0,0)
+    glPushMatrix()
+    glTranslatef(-0.41, 0.092, -0.25)
+    glScalef(1.7, 0.15, 1.0)
+    glutSolidCube(0.1)
+    glPopMatrix()
+
+    glColor3f(0.0, 0.0, 0.0)
+    glPushMatrix()
+    glTranslatef(-0.21, 0.092, -0.25)
+    glScalef(1.7, 0.15, 1.0)
+    glutSolidCube(0.1)
+    glPopMatrix()
+
+    #------side rest--------
+    glColor3f(0.0, 0.0, 0.0)
+    glPushMatrix()
+    glTranslatef(-0.55, 0.065, -0.3)
+    glScalef(1, 1.4, 1.1)
+    glutSolidCube(0.1)
+    glPopMatrix()
+
+def wardrobe():
+    #--------------wall--------
+    glColor3f(0.47, 0.35, 0.26)    # wardrobe left side brown wall
+    glPushMatrix()
+    glTranslatef(-0.99, 0.25, -0.8)
+    glScalef(0.5, 5, 4)
+    glutSolidCube(0.1)
+    glPopMatrix()
+
+    glColor3f(0.47, 0.35, 0.26) #right side brown wall
+    glPushMatrix()
+    glTranslatef(0.99, 0.25, -0.8)
+    glScalef(0.5, 5, 4)
+    glutSolidCube(0.1)
+    glPopMatrix()
+
+    #-----------top-------------
+    glColor3f(0.47, 0.35, 0.26)
+    glPushMatrix()
+    glTranslatef(0.0, 0.5, -0.8)
+    glScalef(20, 0.5, 4)
+    glutSolidCube(0.1)
+    glPopMatrix()
+
+    #-----------wardrobe-------------
+    glColor3f(0.38, 0.27, 0.19)
+    glPushMatrix()
+    glTranslatef(0.4, 0.2, -0.9)
+    glScalef(8, 4, 2)
+    glutSolidCube(0.1)
+    glPopMatrix()
+
+    #----------design--------------
+    glColor3f(0.9, 0.9, 0.9)
+    glPushMatrix()
+    glTranslatef(0.1, 0.2, -0.89)
+    glScalef(1.5, 3.5, 2)
+    glutSolidCube(0.1)
+    glPopMatrix()
+
+    glColor3f(0.9, 0.9, 0.9)
+    glPushMatrix()
+    glTranslatef(0.4, 0.2, -0.89)
+    glScalef(1.5, 3.5, 2)
+    glutSolidCube(0.1)
+    glPopMatrix()
+
+    glColor3f(0.9, 0.9, 0.9)
+    glPushMatrix()
+    glTranslatef(0.6, 0.3, -0.89)
+    glScalef(0.7, 1.5, 2)
+    glutSolidCube(0.1)
+    glPopMatrix()
+
+    glColor3f(0.9, 0.9, 0.9)
+    glPushMatrix()
+    glTranslatef(0.7, 0.3, -0.89)
+    glScalef(0.7, 1.5, 2)
+    glutSolidCube(0.1)
+    glPopMatrix()
+
+    glColor3f(0.47, 0.35, 0.26)
+    glPushMatrix()
+    glTranslatef(0.65, 0.1, -0.89)
+    glScalef(1.8, 1.5, 2)
+    glutSolidCube(0.1)
+    glPopMatrix()
+
+def room1():
+    #--------------floor-----------------
+    glColor3f(0.7, 0.4, 0.3)
+    glBegin(GL_POLYGON)
+    glVertex3f(1, 0.0, -1)
+    glVertex3f(1, 0.0, 1)
+    glVertex3f(-1, 0.0, 1)
+    glVertex3f(-1, 0.0, -1)
+    glEnd()
+
+    lines()
+
+    #--------wall(back)grey1----------------
+    glColor3f(0.69, 0.58, 0.56)  #front of door
+    glBegin(GL_POLYGON)
+    glVertex3f(1, 0.5, -1)
+    glVertex3f(1, 0.0, -1)
+    glVertex3f(-1, 0.0, -1)
+    glVertex3f(-1, 0.5, -1)
+    glEnd()
+
+    #----------wall(right)------
+    glColor3f(0.69, 0.58, 0.56)  #wardrobe ke right wali
+    glBegin(GL_POLYGON)
+    glVertex3f(1, 0.5, -1)
+    glVertex3f(1, 0.0, -1)
+    glVertex3f(1, 0.0, 1)
+    glVertex3f(1, 0.5, 1)
+    glEnd()
+
+    #----------wall(left)red------
+    glColor3f(1.0, 0.0, 0.0)
+    glBegin(GL_POLYGON)
+    glVertex3f(-1.0, 0.5, -1)  #(z,y,x)
+    glVertex3f(-1.0, 0.0, -1)
+    glVertex3f(-1.0, 0.0, 1)
+    glVertex3f(-1.0, 0.5, 1)
+    glEnd()
+
+    #----------roof------
+    glColor3f(0.80, 0.60, 0.58)
+    glBegin(GL_POLYGON)
+    glVertex3f(-1, 0.5, -1)
+    glVertex3f(-1, 0.5, 1)
+    glVertex3f(1, 0.5, 1)
+    glVertex3f(1, 0.5, -1)
+    glEnd()
+
+    #--------wall(back)grey1----------------
+    glColor3f(0.69, 0.58, 0.56)
+    glBegin(GL_POLYGON)
+    glVertex3f(1, 0.5, 1)
+    glVertex3f(1, 0.27, 1)
+    glVertex3f(-1, 0.27, 1)
+    glVertex3f(-1, 0.5, 1)
+    glEnd()
+
+    glColor3f(0.69, 0.58, 0.56)
+    glBegin(GL_POLYGON)
+    glVertex3f(0.2, 0.0, 1)
+    glVertex3f(0.2, 0.27, 1)
+    glVertex3f(-1, 0.27, 1)
+    glVertex3f(-1, 0.0, 1)
+    glEnd()
+
+    glColor3f(0.69, 0.58, 0.56)
+    glBegin(GL_POLYGON)
+    glVertex3f(0.4, 0.0, 1)
+    glVertex3f(0.4, 0.27, 1)
+    glVertex3f(1, 0.27, 1)
+    glVertex3f(1, 0.0, 1)
+    glEnd()
+
+    #----------------door main-------------
+    glColor3f(0.01, 0.012, 0.012)
+    glPushMatrix()
+    glTranslatef(0.15, 0.135, 1.055)
+    glRotatef(45 , 0, 1, 0)
+    glScalef(1.5, 2.7, 0.1)
+    glutSolidCube(0.1)
+    glPopMatrix()
+
+    glColor3f(0.901, 0.9012, 0.9012)
+    glPushMatrix()
+    glTranslatef(0.15, 0.135, 1.055)
+    glRotatef(45 , 0, 1, 0)
+    glScalef(1.2, 2.2, 0.11)
+    glutSolidCube(0.1)
+    glPopMatrix()
+
+    #--border------
+    glColor3f(0.38, 0.27, 0.19)
+    glBegin(GL_POLYGON)
+    glVertex3f(0.4, 0.285, 1.0101)
+    glVertex3f(0.4, 0.27, 1.0101)
+    glVertex3f(0.2, 0.27, 1.0101)
+    glVertex3f(0.2, 0.285, 1.0101)
+    glEnd()
+
+    glColor3f(0.38, 0.27, 0.19)
+    glBegin(GL_POLYGON)
+    glVertex3f(0.395, 0.0, 1.0101)
+    glVertex3f(0.395, 0.285, 1.0101)
+    glVertex3f(0.41, 0.285, 1.0101)
+    glVertex3f(0.41, 0.0, 1.0101)
+    glEnd()
+
+    glColor3f(0.38, 0.27, 0.19)
+    glBegin(GL_POLYGON)
+    glVertex3f(0.2, 0.0, 1.0101)
+    glVertex3f(0.2, 0.285, 1.0101)
+    glVertex3f(0.185, 0.285, 1.0101)
+    glVertex3f(0.185, 0.0, 1.0101)
+    glEnd()
+
+    # back border-----
+    glColor3f(0.38, 0.27, 0.19)
+    glBegin(GL_POLYGON)
+    glVertex3f(0.4, 0.285, 0.999)
+    glVertex3f(0.4, 0.27, 0.999)
+    glVertex3f(0.2, 0.27, 0.999)
+    glVertex3f(0.2, 0.285, 0.999)
+    glEnd()
+
+    glColor3f(0.38, 0.27, 0.19)
+    glBegin(GL_POLYGON)
+    glVertex3f(0.395, 0.0, 0.999)
+    glVertex3f(0.395, 0.285, 0.999)
+    glVertex3f(0.41, 0.285, 0.999)
+    glVertex3f(0.41, 0.0, 0.999)
+    glEnd()
+
+    glColor3f(0.38, 0.27, 0.19)
+    glBegin(GL_POLYGON)
+    glVertex3f(0.2, 0.0, 0.999)
+    glVertex3f(0.2, 0.285, 0.999)
+    glVertex3f(0.185, 0.285, 0.999)
+    glVertex3f(0.185, 0.0, 0.999)
+    glEnd()
+
+    #-------------tv wall------
+    glColor3f(0.53, 0.12, 0.12)
+    glPushMatrix()
+    glTranslatef(0.74, 0.25, 0.5)
+    glScalef(5.1, 5, 9.99)
+    glutSolidCube(0.1)
+    glPopMatrix()
+
+    #---------door------------
+    glColor3f(0.0, 0.0, 0.0)
+    glPushMatrix()
+    glTranslatef(0.74, 0.18, -0.005)
+    glScalef(2, 3.5, 0.2)
+    glutSolidCube(0.1)
+    glPopMatrix()
+
+    glColor3f(0.47, 0.35, 0.26)
+    glPushMatrix()
+    glTranslatef(0.74, 0.18, 0.0)
+    glScalef(2.1, 3.6, 0.2)
+    glutSolidCube(0.1)
+    glPopMatrix()
+
+    #---------roof lamp--------------------------------
+    glColor3f(1.0, 1.0, 0.6)
+    glPushMatrix()
+    glTranslatef(-0.2, 0.5, 0.0)
+    glRotatef(90, 1, 0, 0)
+    glutSolidTorus(0.03, 0.41, 100, 100)
+    glPopMatrix()
+
+    redwall()
+    greywall()
+    box()
+    wardrobe()
+    sofa()
+
+    glFlush()
+
+#-----------------------------------------room2----------------------------------------------------------
+def room2():
+    #-----------------entrane--------------
+    glColor3f(1.0, 1.0, 0.9)
+    glBegin(GL_POLYGON)
+    glVertex3f(0.99, 0.5, 1)
+    glVertex3f(0.99, 0.5, 3)
+    glVertex3f(0.99, 0.0, 3)
+    glVertex3f(0.99, 0.0, 1)
+    glEnd()
+
+    glColor3f(0.5, 0.8, 0.85)
+    glBegin(GL_POLYGON)
+    glVertex3f(0.99, 0.0, 2.8)
+    glVertex3f(0.99, 0.0, 3)
+    glVertex3f(0.99, 0.0, 3)
+    glVertex3f(0.99, 0.0, 2.8)
+    glEnd()
+
+def mtv():
+    glColor3f(0.7, 0.4, 0.2)  #TV wall
+    glPushMatrix()
+    glTranslatef(0.96, 0.2, 1.73)
+    glScalef(0.1, 4, 7)
+    glutSolidCube(0.1)
+    glPopMatrix()
+
+    glColor3f(0.0,0.0,0.0)  # Tv table
+    glPushMatrix()
+    glTranslatef(0.92,0.05,1.73)
+    glScalef(0.6,0.6,0.6)
+    glutSolidCube(0.1)
+    glPopMatrix()
+
+    glColor3f(0.64, 0.64, 0.64) #tv table shadow
+    glPushMatrix()
+    glTranslatef(0.97, 0.05, 1.73)
+    glScalef(0.6, 0.65, 0.65)
+    glutSolidCube(0.1)
+    glPopMatrix()
+
+    #shadow
+    glColor3f(0.0, 0.01, 0.0)
+    glPushMatrix()
+    glTranslatef(0.97, 0.2, 1.73)
+    glScalef(0.001, 4, 7)
+    glutSolidCube(0.1)
+    glPopMatrix()
+
+    #line
+    glColor3f(0.5, 0.8, 0.2)
+    glPushMatrix()
+    glTranslatef(0.97, 0.425, 1.8)
+    glScalef(0.001, 0.05, 23.80)
+    glutSolidCube(0.1)
+    glPopMatrix()
+
+    glColor3f(0.5, 0.8, 0.2)
+    glPushMatrix()
+    glTranslatef(0.97, 0.325, 1.8)
+    glScalef(0.001, 0.05, 23.80)
+    glutSolidCube(0.1)
+    glPopMatrix()
+
+    glColor3f(0.5, 0.8, 0.2)
+    glPushMatrix()
+    glTranslatef(0.97, 0.225, 1.8)
+    glScalef(0.001, 0.05, 23.80)
+    glutSolidCube(0.1)
+    glPopMatrix()
+
+    glColor3f(0.5, 0.8, 0.2)
+    glPushMatrix()
+    glTranslatef(0.97, 0.125, 1.8)
+    glScalef(0.001, 0.05, 23.80)
+    glutSolidCube(0.1)
+    glPopMatrix()
+
+    #tv
+    glColor3f(0.0990, 0.099901, 0.09909)
+    glPushMatrix()
+    glTranslatef(0.9596, 0.2, 1.73)
+    glScalef(0.1, 1.5, 3)
+    glutSolidCube(0.1)
+    glPopMatrix()
+
+    # speaker
+    glColor3f(0.0990, 0.099901, 0.09909)
+    glPushMatrix()
+    glTranslatef(0.9596, 0.075, 2.0)
+    glScalef(0.6, 1.5, 0.5)
+    glutSolidCube(0.1)
+    glPopMatrix()
+
+    glColor3f(0.64, 0.64, 0.64)
+    glPushMatrix()
+    glTranslatef(0.9599, 0.075, 2.0)
+    glScalef(0.6, 1.52, 0.52)
+    glutSolidCube(0.1)
+    glPopMatrix()
+
+    glColor3f(0.0990, 0.099901, 0.09909)
+    glPushMatrix()
+    glTranslatef(0.9596, 0.075, 1.47)
+    glScalef(0.6, 1.5, 0.5)
+    glutSolidCube(0.1)
+    glPopMatrix()
+
+    glColor3f(0.64, 0.64, 0.64)
+    glPushMatrix()
+    glTranslatef(0.9599, 0.075, 1.47)
+    glScalef(0.6, 1.52, 0.52)
+    glutSolidCube(0.1)
+    glPopMatrix()
+
+def msofa():
+    #base
+    glColor3f(0.0, 0.0, 0.0)
+    glPushMatrix()
+    glTranslatef(0.0, 0.002, 1.7)
+    glScalef(1.2, 0.5, 3)
+    glutSolidCube(0.1)
+    glPopMatrix()
+
+    glColor3f(0.0, 0.0, 0.0)
+    glPushMatrix()
+    glTranslatef(0.0, 0.002, 2.1)
+    glScalef(1.2, 0.5, 3)
+    glutSolidCube(0.1)
+    glPopMatrix()
+
+    glColor3f(0.0, 0.0, 0.0)
+    glPushMatrix()
+    glTranslatef(0.065, 0.002, 2.2)
+    glScalef(2.5, 0.5, 1.2)
+    glutSolidCube(0.1)
+    glPopMatrix()
+
+    glColor3f(0.0, 0.0, 0.0)
+    glPushMatrix()
+    glTranslatef(0.065, 0.002, 1.6)
+    glScalef(2.5, 0.5, 1.2)
+    glutSolidCube(0.1)
+    glPopMatrix()
+
+    #layer 2
+    glColor3f(0.5, 0.2, 0.0)
+    glPushMatrix()
+    glTranslatef(0.0, 0.05, 1.7)
+    glScalef(1.2, 0.5, 3)
+    glutSolidCube(0.1)
+    glPopMatrix()
+
+    glColor3f(0.5, 0.2, 0.0)
+    glPushMatrix()
+    glTranslatef(0.0, 0.05, 2.1)
+    glScalef(1.2, 0.5, 3)
+    glutSolidCube(0.1)
+    glPopMatrix()
+
+    glColor3f(0.5, 0.2, 0.0)
+    glPushMatrix()
+    glTranslatef(0.065, 0.05, 2.2)
+    glScalef(2.5, 0.5, 1.2)
+    glutSolidCube(0.1)
+    glPopMatrix()
+
+    glColor3f(0.5, 0.2, 0.0)
+    glPushMatrix()
+    glTranslatef(0.065, 0.05, 1.6)
+    glScalef(2.5, 0.5, 1.2)
+    glutSolidCube(0.1)
+    glPopMatrix()
+
+    #rest
+    glColor3f(0.0, 0.0,0.0)
+    glPushMatrix()
+    glTranslatef(-0.06, 0.05, 1.7)
+    glScalef(0.4, 1.5, 3.1)
+    glutSolidCube(0.1)
+    glPopMatrix()
+
+    glColor3f(0.0, 0.0, 0.0)
+    glPushMatrix()
+    glTranslatef(-0.06, 0.05, 2.115)
+    glScalef(0.4, 1.5, 3.1)
+    glutSolidCube(0.1)
+    glPopMatrix()
+
+    #pillow
+    glColor3f(1.0, 1.0, 1.0)
+    glPushMatrix()
+    glTranslatef(-0.03, 0.115, 1.7)
+    glScalef(0.2, 0.5, 0.5)
+    glRotatef(45, 1, 0, 0)
+    glutSolidCube(0.1)
+    glPopMatrix()
+
+    glColor3f(1.0, 1.0, 1.0)
+    glPushMatrix()
+    glTranslatef(-0.03, 0.115, 1.8)
+    glScalef(0.2, 0.5, 0.5)
+    glRotatef(45, 1, 0, 0)
+    glutSolidCube(0.1)
+    glPopMatrix()
+
+    glColor3f(1.0, 1.0, 1.0)
+    glPushMatrix()
+    glTranslatef(-0.03, 0.115, 1.6)
+    glScalef(0.2, 0.5, 0.5)
+    glRotatef(45, 1, 0, 0)
+    glutSolidCube(0.1)
+    glPopMatrix()
+
+    glColor3f(1.0, 1.0, 1.0)
+    glPushMatrix()
+    glTranslatef(-0.03, 0.115, 2.0)
+    glScalef(0.2, 0.5, 0.5)
+    glRotatef(45, 1, 0, 0)
+    glutSolidCube(0.1)
+    glPopMatrix()
+
+    glColor3f(1.0, 1.0, 1.0)
+    glPushMatrix()
+    glTranslatef(-0.03, 0.115, 2.1)
+    glScalef(0.2, 0.5, 0.5)
+    glRotatef(45, 1, 0, 0)
+    glutSolidCube(0.1)
+    glPopMatrix()
+
+    glColor3f(1.0, 1.0, 1.0)
+    glPushMatrix()
+    glTranslatef(-0.03, 0.115, 2.2)
+    glScalef(0.2, 0.5, 0.5)
+    glRotatef(45, 1, 0, 0)
+    glutSolidCube(0.1)
+    glPopMatrix()
+
+    #table
+    glColor3f(1.0, 0.6, 0.4)
+    glPushMatrix()
+    glTranslatef(0.3, 0.045, 1.9)
+    glScalef(1.5, 0.8, 1.5)
+    glutSolidCube(0.1)
+    glPopMatrix()
+
+    glColor3f(1.0, 0.9, 0.2)   #Teapot on table
+    glPushMatrix()
+    glTranslatef(0.3, 0.10, 1.9)
+    glScalef(0.2, 0.2, 0.2)
+    glutSolidTeapot(0.1)
+    glPopMatrix()
+
+    glColor3f(0.8, 0.4, 0.0)
+    glPushMatrix()
+    glTranslatef(0.3, 0.005, 1.9)
+    glScalef(1.55, 0.2, 1.55)
+    glutSolidCube(0.1)
+    glPopMatrix()
+
+def display():
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+    glLoadIdentity()
+    # For demonstration, we call room1. In a complete program, you might switch between room1 and room2.
+    room1()
+    glutSwapBuffers()
+
+def reshape(w, h):
+    if h == 0:
+        h = 1
+    glViewport(0, 0, w, h)
+    glMatrixMode(GL_PROJECTION)
+    glLoadIdentity()
+    gluPerspective(45, w/float(h), 0.1, 100.0)
+    glMatrixMode(GL_MODELVIEW)
+    glLoadIdentity()
+    gluLookAt(viewer[0], viewer[1], viewer[2],
+              lat[0], lat[1], lat[2],
+              0, 1, 0)
+
+def init():
+    glClearColor(0.0, 0.0, 0.0, 1.0)
+    glEnable(GL_DEPTH_TEST)
+
+def main():
+    glutInit(sys.argv)
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH)
+    glutInitWindowSize(800,600)
+    glutInitWindowPosition(100,100)
+    glutCreateWindow(b"OpenGL Room")
+    init()
+    glutDisplayFunc(display)
+    glutReshapeFunc(reshape)
+    glutTimerFunc(100, tfs, 0)
+    glutTimerFunc(100, doort, 0)
+    glutMainLoop()
+
+if __name__ == "__main__":
+    main()
+    
