@@ -48,47 +48,32 @@ export const utilidades = async(c, mensagemBaileys, botInfo) => {
 
         
 
-             case "criarimg":
-                 try {
-                      const imageUrl = "https://www.w3schools.com/w3css/img_lights.jpg";
-                
-                      const videoUrl = "https://www.w3schools.com/html/mov_bbb.mp4";
+            case "criarimg":
+                try {
+                    const imageUrl = "https://www.w3schools.com/w3css/img_lights.jpg";
+                    const videoUrl = "https://www.w3schools.com/html/mov_bbb.mp4";
 
-                      const pergunta = "Qual arquivo você deseja baixar?";
-                      const opcoes = ["Imagem", "Vídeo"];
+                    const pergunta = "Qual arquivo você deseja baixar?";
+                    const opcoes = ["Imagem", "Vídeo"];
 
-                // Enviar enquete para escolher entre imagem ou vídeo
-                      await enviarEnquete(c, id_chat, pergunta, opcoes);
+                    // Enviar enquete para escolher entre imagem ou vídeo
+                    await enviarEnquete(c, id_chat, pergunta, opcoes);
+                    c.on("message", async (msg) => {
+                        if (msg.pollUpdates) {
+                            const resposta = msg.pollUpdates[0]?.name; // Captura a resposta da enquete
 
-                // Escutar resposta da enquete
-                      c.on("message", async (msg) => {
-                         if (msg.pollUpdates) {
-                         const resposta = msg.pollUpdates[0]?.name; // Captura a resposta da enquete
-
-                          if (resposta === "Imagem") {
-                             await socket.responderTexto(c, id_chat, "Baixando imagem...", mensagem);
-                             await socket.responderArquivoUrl(c, tiposMensagem.imagem, id_chat, imageUrl, '', mensagem);
-                          } else if (resposta === "Vídeo") {
-                             await socket.responderTexto(c, id_chat, "Baixando vídeo...", mensagem);
-                             await socket.responderArquivoUrl(c, tiposMensagem.video, id_chat, videoUrl, '', mensagem);
-                          } catch(err){
-                              if(!err.erro) throw err
-                              await socket.responderTexto(c, id_chat, criarTexto(comandos_info.outros.erro_api, comando, err.erro) , mensagem)
-                          }
-                        break    
-           
-            case 'mangas':
-                try{
-                    const {resultado} = await api.Gerais.obterMangasLancamento()
-                    let respostaTitulo = comandos_info.utilidades.mangas.msgs.resposta_titulo, respostaItens = ''
-                    resultado.forEach((manga)=>{
-                        respostaItens += criarTexto(comandos_info.utilidades.mangas.msgs.resposta_item, manga.nome, manga.capitulo, manga.link)
-                    })
-                    const respostaFinal = respostaTitulo + respostaItens
-                    await socket.responderTexto(c, id_chat, respostaFinal, mensagem)
-                } catch(err){
-                    if(!err.erro) throw err
-                    await socket.responderTexto(c, id_chat, criarTexto(comandos_info.outros.erro_api, comando, err.erro) , mensagem)
+                            if (resposta === "Imagem") {
+                                await socket.responderTexto(c, id_chat, "Baixando imagem...", mensagem);
+                                await socket.responderArquivoUrl(c, tiposMensagem.imagem, id_chat, imageUrl,'', mensagem);
+                            } else if (resposta === "Vídeo") {
+                                await socket.responderTexto(c, id_chat, "Baixando vídeo...", mensagem);
+                                await socket.responderArquivoUrl(c, tiposMensagem.video, id_chat, videoUrl, '', mensagem);
+                            }
+                        }
+                    });
+                } catch (err) {
+                    if (!err.erro) throw err;
+                    await socket.responderTexto(c,id_chat, criarTexto(comandos_info.outros.erro_api, comando, err.erro),mensagem);
                 }
                 break
 
