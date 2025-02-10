@@ -183,39 +183,8 @@ def loadTexture(file_name, tex_id):
     # scale linearly when image is smaller than texture
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
 
-def draw_fridge():
-    # Fridge Body
-    lighting(fridge_no_mat, fridge_ambient, fridge_diffuse, fridge_specular, fridge_shiness)
-    glEnable(GL_TEXTURE_2D)
-    glBindTexture(GL_TEXTURE_2D, texture[4])  # Assuming texture[4] is for the fridge
-    glPushMatrix()
-    glTranslatef(10, 5, -20)  # Position of the fridge
-    glScalef(4, 10, 4)  # Scaling to create a fridge shape
-    draw_solid_cube(1)
-    glPopMatrix()
-    glDisable(GL_TEXTURE_2D)
 
-    # Fridge Door
-    lighting(fridge_door_no_mat, fridge_door_ambient, fridge_door_diffuse, fridge_door_specular, fridge_door_shiness)
-    glEnable(GL_TEXTURE_2D)
-    glBindTexture(GL_TEXTURE_2D, texture[4])  # Same texture for door
-    glPushMatrix()
-    glTranslatef(10, 5, -18)  # Slightly forward for the door
-    glScalef(3.8, 9.8, 0.2)  # Thin layer for the door
-    draw_solid_cube(1)
-    glPopMatrix()
-    glDisable(GL_TEXTURE_2D)
 
-    # Fridge Handle
-    lighting(fridge_handle_no_mat, fridge_handle_ambient, fridge_handle_diffuse, fridge_handle_specular, fridge_handle_shiness)
-    glEnable(GL_TEXTURE_2D)
-    glBindTexture(GL_TEXTURE_2D, texture[5])  # Assuming a separate texture for the handle
-    glPushMatrix()
-    glTranslatef(11.5, 5, -17.9)  # Placing the handle slightly outside
-    glScalef(0.2, 3, 0.2)  # Small handle shape
-    draw_solid_cube(1)
-    glPopMatrix()
-    glDisable(GL_TEXTURE_2D)
 
 def draw_solid_cube(size):
     # Declare variables
@@ -603,8 +572,6 @@ def display():
     draw_chair(6.0, -5.8, 2)
 
     draw_shelf()
-
-    draw_fridge
 
     draw_wall()
     draw_floor()
