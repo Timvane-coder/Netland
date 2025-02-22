@@ -589,9 +589,9 @@ export function comandosInfo(botInfo){
                     erro_live: "[❗] There was a download error, the bot does not accept live downloads."
                 }
             },
-            play: {
+            yt: {
                 descricao: '',
-                guia: `Ex: *${prefixo}play* title - Downloads a video from YouTube with the title entered and sends it.\n`,
+                guia: `Ex: *${prefixo}yt* title - Downloads a video from YouTube with the title entered and sends it.\n`,
                 msgs: {
                     espera: "[WAIT] 🎥 Your video is being downloaded and processed.\n\n"+
                     "Title: *{p1}*\n"+
