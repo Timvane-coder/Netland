@@ -5,7 +5,7 @@
   "type": "module",
   "exports": "./app.js",
   "scripts": {
-    "start": "yarn upgrade @distube/ytdl-core --silent && pm2 start app.js",
+    "start": "yarn upgrade @distube/ytdl-core --silent && node app.js",
     "dev": "node app.js"
   },
   "author": "Leal",
@@ -47,7 +47,6 @@
     "jimp": "^0.22.12",
     "jsdom": "^24.1.1",
     "link-preview-js": "^3.0.5",
-    "mediafire-link": "^0.0.2",
     "moment-timezone": "^0.5.31",
     "node-cache": "^5.1.2",
     "node-gtts": "^2.0.2",
